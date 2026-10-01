@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hogwarts Birthday Experience ⚡</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --gryffindor-gold: #d3a625;
+            --gryffindor-red: #740001;
+            --hogwarts-dark: #0a0a0c;
+            --parchment-bg: #f4e4bc;
+            --text-dark: #2c1d11;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--hogwarts-dark);
+            color: #e0e0e0;
+            font-family: 'Cairo', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 50% 20%, rgba(116, 0, 1, 0.25), transparent 70%),
+                radial-gradient(circle at 80% 80%, rgba(211, 166, 37, 0.15), transparent 60%);
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png') repeat top center;
+            opacity: 0.4;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--gryffindor-gold);
+            font-size: 2.8rem;
+            text-shadow: 0 0 15px rgba(211, 166, 37, 0.6);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Letter Section */
+        .letter-container {
+            background-color: var(--parchment-bg);
+            color: var(--text-dark);
+            border-radius: 8px;
+            padding: 40px 30px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 100px rgba(160, 110, 50, 0.3);
+            border: 2px solid #c5a059;
+            position: relative;
+            transform: rotate(-0.5deg);
+        }
+
+        .letter-container::before {
+            content: "⚡";
+            position: absolute;
+            top: -20px;
+            right: 50%;
+            transform: translateX(50%);
+            font-size: 2rem;
+            background: var(--gryffindor-red);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--gryffindor-gold);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .letter-header {
+            text-align: center;
+            border-bottom: 2px solid rgba(116, 0, 1, 0.3);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            font-family: 'Cinzel', serif;
+        }
+
+        .letter-header h2 {
+            color: var(--gryffindor-red);
+            font-size: 1.8rem;
+        }
+
+        .letter-body {
+            font-size: 1.15rem;
+            line-height: 2;
+            text-align: justify;
+            white-space: pre-line;
+            font-family: 'Amiri', serif;
+        }
+
+        .letter-english {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed rgba(116, 0, 1, 0.2);
+            font-family: 'Cinzel', serif;
+            font-size: 1.05rem;
+            color: #4a2e18;
+            line-height: 1.8;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Gallery Section */
+        .section-title {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            color: var(--gryffindor-gold);
+            font-size: 2rem;
+            margin: 50px 0 30px;
+            text-shadow: 0 0 10px rgba(211, 166, 37, 0.4);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .magical-card {
+            background: rgba(20, 20, 25, 0.8);
+            border: 2px solid var(--gryffindor-gold);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .magical-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(211, 166, 37, 0.3);
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid rgba(211, 166, 37, 0.4);
+            margin-bottom: 15px;
+            background: #000;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .magical-card:hover .card-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .card-caption {
+            font-family: 'Cinzel', serif;
+            color: var(--gryffindor-gold);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            direction: ltr;
+            padding: 5px;
+        }
+
+        /* Interactive Spell Cake */
+        .cake-section {
+            background: rgba(15, 15, 20, 0.9);
+            border: 2px dashed var(--gryffindor-gold);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .spell-btn {
+            background: linear-gradient(135deg, var(--gryffindor-red), #4a0000);
+            color: var(--gryffindor-gold);
+            border: 2px solid var(--gryffindor-gold);
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(116, 0, 1, 0.5);
+        }
+
+        .spell-btn:hover {
+            background: var(--gryffindor-gold);
+            color: var(--gryffindor-red);
+            box-shadow: 0 0 20px rgba(211, 166, 37, 0.8);
+        }
+
+        .candle-container {
+            font-size: 4rem;
+            margin: 20px 0;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .letter-container {
+                padding: 25px 18px;
+            }
+
+            .letter-body {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="stars"></div>
+
+    <header>
+        <h1>Hogwarts Birthday Experience ⚡</h1>
+        <p>رسالة سحرية مخصصة لأغلى وأقرب الناس</p>
+    </header>
+
+    <div class="container">
+
+        <!-- Acceptance Letter -->
+        <div class="letter-container">
+            <div class="letter-header">
+                <h2>خطاب القبول السحري 📜</h2>
+                <p style="font-size: 0.85rem; color: #7a5c38;">Ministry of Magic & Friendship</p>
+            </div>
+
+            <div class="letter-body">
+                كل عام وانت بخير وصحة وسعادة يا أخي 🤍
+                بجد من أنضف وألطف وأحسن الناس اللي قابلتهم في حياتي
+                شخص نضيف وطيب فعلًا
+                مواقفنا مع بعض متتعدش، داخلين على تلات سنين سوا حرفيًا
+                أقرب وأفضل حد عرفته شخص فخورة بيه وبأي حاجة بتعملها
+                عايزاك تشد حيلك، وتخليك عارف كويس إنك مش الشخص الوحش ولا سيء ولا أي حاجة من اللي في دماغك دي
+                انت شخص كويس أوي ونضيف وطيب، وعمري ما شوفت حد زيك في حياتي كلها
+                مهما حصل، انت هتفضل أقرب حد ليا
+                وحتى لو مفضلناش قريبين، بس انت ليك مكانة مفيش حد في الدنيا عرف يوصلها
+                معرفش ليه ولا ازاي، بس انت مكانك عمر ما حد هياخده
+                والألقاب اللي كنت بتقولها ليا، مش بخلي أي حد مهما كان مين يقولها ليا
+                لأنك شخص فعلًا مميز وغير أي حد 💫
+                كل سنة وانت طيب يا أخي وبخير وصحة يا رب
+                وسنين كتير تعدي بالحلو والوحش اللي فيها، بس واحنا لسه أخوات 🖤
+            </div>
+
+            <div class="letter-english">
+                You’re one of the purest souls I’ve ever known.
+                No matter where life takes us, you’ll always have a place in my heart that no one can reach.
+                Stay strong, stay you because you’re truly one of a kind 🌟
+            </div>
+        </div>
+
+        <!-- Gallery -->
+        <h2 class="section-title">Daily Prophet Gallery 🧙‍♂️</h2>
+        <div class="gallery-grid">
+
+            <!-- Card 1: Together -->
+            <div class="magical-card">
+                <div class="card-img-wrapper">
+                    <img src="1.jpeg" alt="Together Photo">
+                </div>
+                <div class='card-caption'>
+                    "Nearly three years, and you're still my favorite person"
+                </div>
+            </div>
+
+            <!-- Card 2: Childhood -->
+            <div class="magical-card">
+                <div class="card-img-wrapper">
+                    <img src="2.jpeg" alt="Childhood Photo">
+
+                </div>
+                <div class="card-caption">
+                    "We didn't share a childhood, but we built a lifetime"
+                </div>
+            </div>
+
+            <!-- Card 3: Suit -->
+            <div class="magical-card">
+                <div class="card-img-wrapper">
+                    <img src="3.jpeg" alt="Suit Photo">1.jpeg
+                </div>
+                <div class="card-caption">
+                    "Royalty isn't in the suit it's in the soul wearing it"
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Interactive Spell Cake -->
+        <div class="cake-section">
+            <h2 style="font-family: 'Cinzel', serif; color: var(--gryffindor-gold); margin-bottom: 10px;">Make a Magical
+                Wish 🎂</h2>
+            <p>اضغط على الزر لاستخدام تعويذة إطفاء الشمعة والاحتفال!</p>
+            <div class="candle-container" id="candle">🎂🕯️</div>
+            <br>
+            <button class="spell-btn" onclick="castSpell()">Cast Aguamenti 🎂</button>
+        </div>
+
+    </div>
+
+    <footer>
+        Made with Magic & Friendship ⚡ Happy Birthday!
+    </footer>
+
+    <script>
+        function castSpell() {
+            const candle = document.getElementById('candle');
+            candle.innerHTML = '🎂✨🎉';
+            alert('✨ Alohomora! Wish Granted! كل سنة وانت طيب وبخير يا رب 🎉');
+        }
+    </script>
+</body>
+
+</html>
