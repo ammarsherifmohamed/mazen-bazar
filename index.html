@@ -1,371 +1,562 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hogwarts Birthday Experience ⚡</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&display=swap"
-        rel="stylesheet">
+    <title>Hogwarts Birthday Experience - Best Friend Edition</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Cinzel+Decorative:wght@700;900&family=MedievalSharp&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gryffindor: {
+                            red: '#740001',
+                            gold: '#EEBA30',
+                            darkRed: '#3b0000',
+                            darkGold: '#b38312'
+                        },
+                        parchment: '#f5e6c8',
+                        parchmentDark: '#d9c298',
+                        magicDark: '#0b0813',
+                        slytherinGreen: '#1a472a',
+                        ravenclawBlue: '#0e1a40'
+                    },
+                    fontFamily: {
+                        cinzel: ['"Cinzel Decorative"', 'serif'],
+                        medieval: ['MedievalSharp', 'cursive'],
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --gryffindor-gold: #d3a625;
-            --gryffindor-red: #740001;
-            --hogwarts-dark: #0a0a0c;
-            --parchment-bg: #f4e4bc;
-            --text-dark: #2c1d11;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            background-color: var(--hogwarts-dark);
-            color: #e0e0e0;
-            font-family: 'Cairo', serif;
-            min-height: 100vh;
+            font-family: 'Cairo', 'MedievalSharp', serif;
+            background-color: #0b0813;
+            color: #f5e6c8;
             overflow-x: hidden;
-            background-image:
-                radial-gradient(circle at 50% 20%, rgba(116, 0, 1, 0.25), transparent 70%),
-                radial-gradient(circle at 80% 80%, rgba(211, 166, 37, 0.15), transparent 60%);
+            cursor: default;
         }
 
-        .stars {
+        .parchment-card {
+            background: linear-gradient(135deg, #f8eaC5 0%, #e2c992 100%);
+            box-shadow: inset 0 0 40px rgba(116, 0, 1, 0.25), 0 10px 30px rgba(0,0,0,0.8);
+            border: 2px solid #EEBA30;
+        }
+
+        .gold-border {
+            border: 3px solid transparent;
+            border-image: linear-gradient(to bottom right, #EEBA30, #740001, #EEBA30) 1;
+        }
+
+        /* Floating Candles Animation */
+        .floating-candle {
+            position: absolute;
+            width: 12px;
+            height: 45px;
+            background: linear-gradient(to bottom, #fffdf0, #e0d5a6);
+            border-radius: 3px 3px 6px 6px;
+            box-shadow: 0 0 15px rgba(238, 186, 48, 0.4);
+            animation: float 4s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .candle-flame {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 14px;
+            background: radial-gradient(ellipse at bottom, #ffffff 0%, #ffde00 30%, #ff5500 70%, rgba(255,85,0,0) 100%);
+            border-radius: 50% 50% 20% 20%;
+            animation: flicker 0.8s infinite alternate ease-in-out;
+            filter: drop-shadow(0 0 8px #ff7800);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(-1deg); }
+            100% { transform: translateY(-25px) rotate(2deg); }
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 0.9; }
+            50% { transform: translateX(-50%) scale(1.15) rotate(3deg); opacity: 1; }
+            100% { transform: translateX(-50%) scale(0.9) rotate(-1deg); opacity: 0.85; }
+        }
+
+        .wax-seal {
+            background: radial-gradient(circle at 35% 35%, #b30000, #4a0000);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+            border: 2px solid #740001;
+        }
+
+        #magicCanvas {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             pointer-events: none;
-            z-index: 0;
-            background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png') repeat top center;
-            opacity: 0.4;
+            z-index: 9999;
         }
 
-        header {
-            text-align: center;
-            padding: 40px 20px 20px;
-            position: relative;
-            z-index: 1;
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-
-        header h1 {
-            font-family: 'Cinzel', serif;
-            color: var(--gryffindor-gold);
-            font-size: 2.8rem;
-            text-shadow: 0 0 15px rgba(211, 166, 37, 0.6);
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+        ::-webkit-scrollbar-track {
+            background: #0b0813;
         }
-
-        header p {
-            color: #aaa;
-            font-size: 1.1rem;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Letter Section */
-        .letter-container {
-            background-color: var(--parchment-bg);
-            color: var(--text-dark);
-            border-radius: 8px;
-            padding: 40px 30px;
-            margin: 30px 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 100px rgba(160, 110, 50, 0.3);
-            border: 2px solid #c5a059;
-            position: relative;
-            transform: rotate(-0.5deg);
-        }
-
-        .letter-container::before {
-            content: "⚡";
-            position: absolute;
-            top: -20px;
-            right: 50%;
-            transform: translateX(50%);
-            font-size: 2rem;
-            background: var(--gryffindor-red);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--gryffindor-gold);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .letter-header {
-            text-align: center;
-            border-bottom: 2px solid rgba(116, 0, 1, 0.3);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-            font-family: 'Cinzel', serif;
-        }
-
-        .letter-header h2 {
-            color: var(--gryffindor-red);
-            font-size: 1.8rem;
-        }
-
-        .letter-body {
-            font-size: 1.15rem;
-            line-height: 2;
-            text-align: justify;
-            white-space: pre-line;
-            font-family: 'Amiri', serif;
-        }
-
-        .letter-english {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px dashed rgba(116, 0, 1, 0.2);
-            font-family: 'Cinzel', serif;
-            font-size: 1.05rem;
-            color: #4a2e18;
-            line-height: 1.8;
-            direction: ltr;
-            text-align: left;
-        }
-
-        /* Gallery Section */
-        .section-title {
-            text-align: center;
-            font-family: 'Cinzel', serif;
-            color: var(--gryffindor-gold);
-            font-size: 2rem;
-            margin: 50px 0 30px;
-            text-shadow: 0 0 10px rgba(211, 166, 37, 0.4);
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
-        }
-
-        .magical-card {
-            background: rgba(20, 20, 25, 0.8);
-            border: 2px solid var(--gryffindor-gold);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .magical-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 12px 25px rgba(211, 166, 37, 0.3);
-        }
-
-        .card-img-wrapper {
-            width: 100%;
-            height: 320px;
-            overflow: hidden;
-            border-radius: 8px;
-            border: 1px solid rgba(211, 166, 37, 0.4);
-            margin-bottom: 15px;
-            background: #000;
-        }
-
-        .card-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .magical-card:hover .card-img-wrapper img {
-            transform: scale(1.05);
-        }
-
-        .card-caption {
-            font-family: 'Cinzel', serif;
-            color: var(--gryffindor-gold);
-            font-size: 0.95rem;
-            line-height: 1.5;
-            direction: ltr;
-            padding: 5px;
-        }
-
-        /* Interactive Spell Cake */
-        .cake-section {
-            background: rgba(15, 15, 20, 0.9);
-            border: 2px dashed var(--gryffindor-gold);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 50px 0;
-            text-align: center;
-        }
-
-        .spell-btn {
-            background: linear-gradient(135deg, var(--gryffindor-red), #4a0000);
-            color: var(--gryffindor-gold);
-            border: 2px solid var(--gryffindor-gold);
-            padding: 12px 30px;
-            font-size: 1.2rem;
-            font-family: 'Cinzel', serif;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(116, 0, 1, 0.5);
-        }
-
-        .spell-btn:hover {
-            background: var(--gryffindor-gold);
-            color: var(--gryffindor-red);
-            box-shadow: 0 0 20px rgba(211, 166, 37, 0.8);
-        }
-
-        .candle-container {
-            font-size: 4rem;
-            margin: 20px 0;
-            cursor: pointer;
-            display: inline-block;
-            transition: transform 0.3s;
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px;
-            color: #777;
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 40px;
-        }
-
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 2rem;
-            }
-
-            .letter-container {
-                padding: 25px 18px;
-            }
-
-            .letter-body {
-                font-size: 1rem;
-            }
+        ::-webkit-scrollbar-thumb {
+            background: #740001;
+            border: 1px solid #EEBA30;
+            border-radius: 4px;
         }
     </style>
 </head>
+<body class="min-h-screen relative flex flex-col justify-between items-center selection:bg-gryffindor-gold selection:text-gryffindor-red">
 
-<body>
+    <canvas id="magicCanvas"></canvas>
 
-    <div class="stars"></div>
+    <!-- Floating Background Candles -->
+    <div id="floatingCandlesContainer" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
 
-    <header>
-        <h1>Hogwarts Birthday Experience ⚡</h1>
-        <p>رسالة سحرية مخصصة لأغلى وأقرب الناس</p>
+    <!-- Header Navigation & Audio Toggle -->
+    <header class="w-full max-w-6xl p-4 md:p-6 flex justify-between items-center z-50">
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <span class="text-3xl animate-pulse">🧹</span>
+            <h1 class="font-cinzel text-lg md:text-2xl font-bold text-gryffindor-gold tracking-widest drop-shadow-[0_2px_10px_rgba(238,186,48,0.5)]">
+                HOGWARTS EXPRESS
+            </h1>
+        </div>
+        
+        <button id="musicToggle" onclick="toggleAudio()" class="flex items-center gap-2 bg-gryffindor-red/80 hover:bg-gryffindor-red text-gryffindor-gold px-4 py-2 rounded-full border border-gryffindor-gold transition-all duration-300 shadow-lg group">
+            <span id="musicText" class="text-xs md:text-sm font-semibold font-cairo">الموسيقى السحرية 🎵</span>
+        </button>
     </header>
 
-    <div class="container">
+    <main class="w-full max-w-5xl px-4 py-6 flex flex-col items-center gap-16 z-10">
 
-        <!-- Acceptance Letter -->
-        <div class="letter-container">
-            <div class="letter-header">
-                <h2>خطاب القبول السحري 📜</h2>
-                <p style="font-size: 0.85rem; color: #7a5c38;">Ministry of Magic & Friendship</p>
+        <section id="envelopeSection" class="w-full flex flex-col items-center justify-center min-h-[65vh] transition-all duration-1000">
+            <div class="text-center mb-8">
+                <span class="inline-block bg-gryffindor-gold/10 text-gryffindor-gold border border-gryffindor-gold/40 px-4 py-1 rounded-full text-xs md:text-sm font-cairo mb-3">
+                    ✉️ رسالة خاصة جداً وصلت للتو عبر البومة
+                </span>
+                <h2 class="font-cinzel text-3xl md:text-5xl font-bold text-gryffindor-gold mb-2">دعوة هوجوارتس الرسمية</h2>
+                <p class="text-base md:text-lg text-gray-300 font-cairo">اضغط على ختم الشمع السحري لفتح الرسالة! ✨</p>
             </div>
 
-            <div class="letter-body">
-                كل عام وانت بخير وصحة وسعادة يا أخي 🤍
-                بجد من أنضف وألطف وأحسن الناس اللي قابلتهم في حياتي
-                شخص نضيف وطيب فعلًا
-                مواقفنا مع بعض متتعدش، داخلين على تلات سنين سوا حرفيًا
-                أقرب وأفضل حد عرفته شخص فخورة بيه وبأي حاجة بتعملها
-                عايزاك تشد حيلك، وتخليك عارف كويس إنك مش الشخص الوحش ولا سيء ولا أي حاجة من اللي في دماغك دي
-                انت شخص كويس أوي ونضيف وطيب، وعمري ما شوفت حد زيك في حياتي كلها
-                مهما حصل، انت هتفضل أقرب حد ليا
-                وحتى لو مفضلناش قريبين، بس انت ليك مكانة مفيش حد في الدنيا عرف يوصلها
-                معرفش ليه ولا ازاي، بس انت مكانك عمر ما حد هياخده
-                والألقاب اللي كنت بتقولها ليا، مش بخلي أي حد مهما كان مين يقولها ليا
-                لأنك شخص فعلًا مميز وغير أي حد 💫
-                كل سنة وانت طيب يا أخي وبخير وصحة يا رب
-                وسنين كتير تعدي بالحلو والوحش اللي فيها، بس واحنا لسه أخوات 🖤
+            <!-- Envelope Container -->
+            <div id="envelope" onclick="openLetter()" class="relative w-80 md:w-96 h-56 bg-parchmentDark rounded-lg shadow-2xl cursor-pointer transform hover:scale-105 transition-all duration-500 border-2 border-gryffindor-gold flex items-center justify-center overflow-visible">
+                <div id="envelopeFlap" class="absolute top-0 left-0 w-0 h-0 border-l-[160px] md:border-l-[192px] border-l-transparent border-r-[160px] md:border-r-[192px] border-r-transparent border-t-[120px] border-t-parchment origin-top transition-transform duration-700 z-20"></div>
+                
+                <div id="waxSeal" class="wax-seal z-30 w-16 h-16 rounded-full flex items-center justify-center cursor-pointer transform hover:scale-110 transition-transform">
+                    <span class="text-gryffindor-gold font-cinzel text-2xl font-bold">H</span>
+                </div>
+
+                <p class="absolute bottom-4 font-medieval text-gryffindor-darkRed text-center font-bold tracking-wider z-10 text-sm md:text-base">
+                    إلى: أعز وأغلى أخت وأخ 🖤✨
+                </p>
             </div>
 
-            <div class="letter-english">
-                You’re one of the purest souls I’ve ever known.
-                No matter where life takes us, you’ll always have a place in my heart that no one can reach.
-                Stay strong, stay you because you’re truly one of a kind 🌟
-            </div>
-        </div>
-
-        <!-- Gallery -->
-        <h2 class="section-title">Daily Prophet Gallery 🧙‍♂️</h2>
-        <div class="gallery-grid">
-
-            <!-- Card 1: Together -->
-            <div class="magical-card">
-                <div class="card-img-wrapper">
-                    <img src="1.jpeg" alt="Together Photo">
+            <!-- The Letter Content -->
+            <div id="letterContent" class="hidden opacity-0 w-full max-w-2xl parchment-card p-6 md:p-10 rounded-xl text-gryffindor-darkRed shadow-2xl relative transition-all duration-1000 transform translate-y-10">
+                <div class="text-center border-b-2 border-gryffindor-red/30 pb-4 mb-6">
+                    <div class="text-5xl mb-2">🏰</div>
+                    <h3 class="font-cinzel text-2xl md:text-3xl font-bold text-gryffindor-red">HOGWARTS SCHOOL OF WITCHCRAFT</h3>
+                    <p class="text-xs font-medieval text-gryffindor-darkGold tracking-widest uppercase mt-1">Best Friend Special Birthday Privilege Edition</p>
                 </div>
-                <div class='card-caption'>
-                    "Nearly three years, and you're still my favorite person"
-                </div>
-            </div>
+                
+                <div class="space-y-4 text-right text-base md:text-lg font-cairo leading-relaxed font-bold">
+                    <p class="text-xl md:text-2xl text-gryffindor-darkRed">كل عام وانت بخير وصحة وسعادة يا أخي 🤍</p>
+                    <p>بجد من أنضف وألطف وأحسن الناس اللي قابلتهم في حياتي، شخص نضيف وطيب فعلًا.</p>
+                    <p>مواقفنا مع بعض متتعدش، داخلين على تلات سنين سوا حرفيًا.. أقرب وأفضل حد عرفته شخص فخورة بيه وبأي حاجة بتعملها.</p>
+                    <p>عايزاك تشد حيلك، وتخليك عارف كويس إنك مش الشخص الوحش ولا سيء ولا أي حاجة من اللي في دماغك دي.. انت شخص كويس أوي ونضيف وطيب، وعمري ما شوفت حد زيك في حياتي كلها.</p>
+                    <p>مهما حصل، انت هتفضل أقرب حد ليا.. وحتى لو مفضلناش قريبين، بس انت ليك مكانة مفيش حد في الدنيا عرف يوصلها.</p>
+                    <p>معرفش ليه ولا ازاي، بس انت مكانك عمر ما حد هياخده. والألقاب اللي كنت بتقولها ليا، مش بخلي أي حد مهما كان مين يقولها ليا لأنك شخص فعلًا مميز وغير أي حد 💫</p>
+                    <p>كل سنة وانت طيب يا أخي وبخير وصحة يا رب، وسنين كتير تعدي بالحلو والوحش اللي فيها، بس واحنا لسه أخوات 🖤</p>
 
-            <!-- Card 2: Childhood -->
-            <div class="magical-card">
-                <div class="card-img-wrapper">
-                    <img src="2.jpeg" alt="Childhood Photo">
+                    <div class="my-6 p-4 bg-gryffindor-red/10 rounded-xl border-r-4 border-gryffindor-red font-cinzel text-left text-sm md:text-base dir-ltr text-gryffindor-darkRed leading-relaxed">
+                        "You’re one of the purest souls I’ve ever known. No matter where life takes us, you’ll always have a place in my heart that no one can reach. Stay strong, stay you because you’re truly one of a kind 🌟"
+                    </div>
+                </div>
 
-                </div>
-                <div class="card-caption">
-                    "We didn't share a childhood, but we built a lifetime"
-                </div>
-            </div>
-
-            <!-- Card 3: Suit -->
-            <div class="magical-card">
-                <div class="card-img-wrapper">
-                    <img src="3.jpeg" alt="Suit Photo">1.jpeg
-                </div>
-                <div class="card-caption">
-                    "Royalty isn't in the suit it's in the soul wearing it"
+                <div class="mt-8 flex justify-between items-end border-t border-gryffindor-red/30 pt-4">
+                    <div class="text-center">
+                        <span class="text-3xl">✨</span>
+                        <p class="font-medieval text-xs font-bold text-gryffindor-darkGold">Official Wizard Seal</p>
+                    </div>
+                    <div class="text-left font-medieval text-base md:text-lg font-bold text-gryffindor-red">
+                        مع كل الحب والسحر,<br>
+                        أختك وصديقتك المخلصة ✨
+                    </div>
                 </div>
             </div>
+        </section>
 
-        </div>
+        <section id="sortingHatSection" class="w-full flex flex-col items-center text-center py-10 bg-magicDark/80 rounded-3xl border border-gryffindor-gold/30 p-6 md:p-10 backdrop-blur-md shadow-2xl">
+            <div class="max-w-2xl">
+                <span class="text-6xl mb-4 inline-block animate-bounce">🧙‍♂️</span>
+                <h2 class="font-cinzel text-2xl md:text-4xl font-bold text-gryffindor-gold mb-3">قبعة التنسيق السحرية (Sorting Hat)</h2>
+                <p class="text-gray-300 font-cairo text-sm md:text-base mb-6">اضغط لاكتشاف أي منزل في هوجوارتس يناسب شخصيتك النبيلة اليوم!</p>
+                
+                <button onclick="sortHouse()" class="bg-gradient-to-r from-gryffindor-red to-gryffindor-darkRed text-gryffindor-gold font-bold text-base md:text-xl px-8 py-4 rounded-full border-2 border-gryffindor-gold shadow-lg hover:shadow-[0_0_25px_rgba(238,186,48,0.8)] transform hover:-translate-y-1 transition-all duration-300">
+                    ضع القبعة السحرية على رأسك 🎩✨
+                </button>
 
-        <!-- Interactive Spell Cake -->
-        <div class="cake-section">
-            <h2 style="font-family: 'Cinzel', serif; color: var(--gryffindor-gold); margin-bottom: 10px;">Make a Magical
-                Wish 🎂</h2>
-            <p>اضغط على الزر لاستخدام تعويذة إطفاء الشمعة والاحتفال!</p>
-            <div class="candle-container" id="candle">🎂🕯️</div>
-            <br>
-            <button class="spell-btn" onclick="castSpell()">Cast Aguamenti 🎂</button>
-        </div>
+                <div id="sortingResult" class="hidden mt-8 p-6 parchment-card rounded-2xl text-gryffindor-darkRed shadow-2xl border-2 border-gryffindor-gold">
+                    <div id="houseIcon" class="text-5xl mb-2"></div>
+                    <h3 id="houseTitle" class="font-cinzel text-2xl md:text-3xl font-bold mb-2"></h3>
+                    <p id="houseDescription" class="text-base md:text-lg font-cairo font-semibold leading-relaxed"></p>
+                </div>
+            </div>
+        </section>
 
-    </div>
+        <section id="gallerySection" class="w-full">
+            <div class="text-center mb-10">
+                <h2 class="font-cinzel text-2xl md:text-4xl font-bold text-gryffindor-gold mb-2">معرض اللوحات السحرية 🖼</h2>
+                <p class="text-gray-300 font-cairo text-sm md:text-base">ذكريات مصورة سحرية مع أجمل الجمل الخاصة!</p>
+            </div>
 
-    <footer>
-        Made with Magic & Friendship ⚡ Happy Birthday!
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Photo 1: Together -->
+                <div class="group relative parchment-card p-4 rounded-xl gold-border shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex flex-col items-center">
+                    <div class="w-full h-80 bg-gryffindor-darkRed/10 rounded-lg border-2 border-gryffindor-gold overflow-hidden relative">
+                        <img src="1.jpeg" alt="صورة سوا" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <p class="font-cairo text-center text-gryffindor-darkRed font-bold mt-4 text-sm md:text-base px-2">
+                        "Nearly three years, and you're still my favorite person" ✨
+                    </p>
+                </div>
+
+                <!-- Photo 2: Childhood -->
+                <div class="group relative parchment-card p-4 rounded-xl gold-border shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex flex-col items-center">
+                    <div class="w-full h-80 bg-gryffindor-darkRed/10 rounded-lg border-2 border-gryffindor-gold overflow-hidden relative">
+                        <img src="2.jpeg" alt="صورة الطفولة" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <p class="font-cairo text-center text-gryffindor-darkRed font-bold mt-4 text-sm md:text-base px-2">
+                        "We didn't share a childhood, but we built a lifetime" 🧸
+                    </p>
+                </div>
+
+                <!-- Photo 3: Black Suit -->
+                <div class="group relative parchment-card p-4 rounded-xl gold-border shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex flex-col items-center">
+                    <div class="w-full h-80 bg-gryffindor-darkRed/10 rounded-lg border-2 border-gryffindor-gold overflow-hidden relative">
+                        <img src="3.jpeg" alt="صورة البدلة" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <p class="font-cairo text-center text-gryffindor-darkRed font-bold mt-4 text-sm md:text-base px-2">
+                        "Royalty isn't in the suit it's in the soul wearing it" 👔👑
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="spellsSection" class="w-full">
+            <div class="text-center mb-10">
+                <h2 class="font-cinzel text-2xl md:text-4xl font-bold text-gryffindor-gold mb-2">تعاويذ الصداقة السحرية 🎂✨</h2>
+                <p class="text-gray-300 font-cairo text-sm md:text-base">اضغط على أي تعويذة لكشف الرسائل الخاصة بها!</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div onclick="castSpell('lumos', 'lumosMsg')" class="cursor-pointer bg-magicDark/90 hover:bg-gryffindor-red/30 border-2 border-gryffindor-gold p-6 rounded-2xl shadow-xl transition-all duration-300 flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-cinzel text-xl md:text-2xl font-bold text-gryffindor-gold">LUMOS 💡</span>
+                        <span class="bg-gryffindor-gold/20 text-gryffindor-gold text-xs px-3 py-1 rounded-full font-cairo">تعويذة النور</span>
+                    </div>
+                    <p class="text-xs md:text-sm text-gray-300 mb-3 font-cairo">تُضيء أي يوم مظلم بالطيبة والنقاء!</p>
+                    <div id="lumosMsg" class="hidden mt-2 p-4 parchment-card rounded-xl text-gryffindor-darkRed font-cairo font-bold text-sm md:text-base">
+                        "انت شخص نضيف وطيب وعمري ما شوفت حد زيك في حياتي كلها!" 🌟
+                    </div>
+                </div>
+
+                <div onclick="castSpell('patronum', 'patronumMsg')" class="cursor-pointer bg-magicDark/90 hover:bg-gryffindor-red/30 border-2 border-gryffindor-gold p-6 rounded-2xl shadow-xl transition-all duration-300 flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-cinzel text-xl md:text-2xl font-bold text-gryffindor-gold">EXPECTO PATRONUM 🦌</span>
+                        <span class="bg-gryffindor-gold/20 text-gryffindor-gold text-xs px-3 py-1 rounded-full font-cairo">تعويذة الأمان</span>
+                    </div>
+                    <p class="text-xs md:text-sm text-gray-300 mb-3 font-cairo">تعتمد على القوة الحقيقية الموجودة داخلك!</p>
+                    <div id="patronumMsg" class="hidden mt-2 p-4 parchment-card rounded-xl text-gryffindor-darkRed font-cairo font-bold text-sm md:text-base">
+                        "خليك عارف كويس إنك مش الشخص الوحش ولا سيء، شد حيلك وكن فخوراً بنفسك دائماً!" 🛡️
+                    </div>
+                </div>
+
+                <div onclick="castSpell('alohomora', 'alohomoraMsg')" class="cursor-pointer bg-magicDark/90 hover:bg-gryffindor-red/30 border-2 border-gryffindor-gold p-6 rounded-2xl shadow-xl transition-all duration-300 flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-cinzel text-xl md:text-2xl font-bold text-gryffindor-gold">ALOHOMORA 🔑</span>
+                        <span class="bg-gryffindor-gold/20 text-gryffindor-gold text-xs px-3 py-1 rounded-full font-cairo">المكانة الخاصة</span>
+                    </div>
+                    <p class="text-xs md:text-sm text-gray-300 mb-3 font-cairo">تفتح مكانة متميزة في القلوب!</p>
+                    <div id="alohomoraMsg" class="hidden mt-2 p-4 parchment-card rounded-xl text-gryffindor-darkRed font-cairo font-bold text-sm md:text-base">
+                        "ليك مكانة مفيش حد في الدنيا عرف يوصلها ومكانك عمر ما حد هياخده!" 👑
+                    </div>
+                </div>
+
+                <div onclick="castSpell('revelio', 'revelioMsg')" class="cursor-pointer bg-magicDark/90 hover:bg-gryffindor-red/30 border-2 border-gryffindor-gold p-6 rounded-2xl shadow-xl transition-all duration-300 flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-cinzel text-xl md:text-2xl font-bold text-gryffindor-gold">REVELIO 🔍</span>
+                        <span class="bg-gryffindor-gold/20 text-gryffindor-gold text-xs px-3 py-1 rounded-full font-cairo">التميز الحقيقي</span>
+                    </div>
+                    <p class="text-xs md:text-sm text-gray-300 mb-3 font-cairo">تكشف عن الروح الاستثنائية!</p>
+                    <div id="revelioMsg" class="hidden mt-2 p-4 parchment-card rounded-xl text-gryffindor-darkRed font-cairo font-bold text-sm md:text-base">
+                        "انت شخص مميز وغير أي حد، ودائماً وأبداً ليك كل المعزة والمكانة المميزة!" 💫
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="cakeSection" class="w-full flex flex-col items-center text-center py-12 bg-magicDark/90 rounded-3xl border-2 border-gryffindor-gold p-6 relative overflow-hidden shadow-2xl">
+            <h2 class="font-cinzel text-2xl md:text-4xl font-bold text-gryffindor-gold mb-2">كيكة عيد الميلاد السحرية 🎂✨</h2>
+            <p class="text-gray-300 font-cairo text-sm md:text-base mb-6">اتمنى أمنية سحرية واضغط على الزر لإطفاء الشموع!</p>
+
+            <div class="relative my-6 flex flex-col items-center">
+                <div id="candlesContainer" class="flex space-x-6 space-x-reverse z-20 mb-[-8px]">
+                    <div class="candle flex flex-col items-center">
+                        <div class="candle-flame"></div>
+                        <div class="w-3 h-10 bg-gradient-to-b from-gryffindor-gold to-yellow-600 rounded-t-sm"></div>
+                    </div>
+                    <div class="candle flex flex-col items-center">
+                        <div class="candle-flame"></div>
+                        <div class="w-3 h-10 bg-gradient-to-b from-gryffindor-gold to-yellow-600 rounded-t-sm"></div>
+                    </div>
+                    <div class="candle flex flex-col items-center">
+                        <div class="candle-flame"></div>
+                        <div class="w-3 h-10 bg-gradient-to-b from-gryffindor-gold to-yellow-600 rounded-t-sm"></div>
+                    </div>
+                </div>
+
+                <div class="w-48 md:w-56 h-16 bg-gryffindor-red rounded-t-2xl border-2 border-gryffindor-gold flex items-center justify-center relative shadow-lg">
+                    <span class="text-gryffindor-gold text-xs font-medieval font-bold tracking-widest">HAPPY BIRTHDAY</span>
+                </div>
+                <div class="w-64 md:w-72 h-20 bg-gryffindor-darkRed border-2 border-gryffindor-gold flex items-center justify-center relative shadow-xl">
+                    <span class="text-gryffindor-gold text-lg">🎂✨🎂✨</span>
+                </div>
+            </div>
+
+            <button onclick="blowCandles()" class="bg-gradient-to-r from-gryffindor-gold via-yellow-400 to-gryffindor-gold text-gryffindor-darkRed font-black text-base md:text-xl px-8 py-4 rounded-full shadow-2xl border-2 border-white transform hover:scale-105 active:scale-95 transition-all duration-300">
+                إطفاء الشموع بضربة عصا سحرية 🎂✨
+            </button>
+
+            <div id="grandBirthdayBanner" class="hidden mt-8 p-6 md:p-8 parchment-card rounded-2xl text-gryffindor-darkRed shadow-2xl border-4 border-gryffindor-gold animate-bounce w-full max-w-xl">
+                <h3 class="font-cinzel text-2xl md:text-3xl font-bold mb-3 text-gryffindor-red">🎉 كل سنة وانت طيب وبخير وصحة يا أخي! 🎉</h3>
+                <p class="font-cairo text-base md:text-lg leading-relaxed font-bold">
+                    سنين كتير تعدي بالحلو والوحش اللي فيها، واحنا لسه أخوات ومع بعض دايماً يا رب! 🖤✨
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-6 text-gryffindor-gold/70 text-xs md:text-sm font-cairo border-t border-gryffindor-gold/20 z-10 mt-12">
+        <p>صُنع بحب وسحر خاص لأغلى وأحسن أخ 🖤 | Hogwarts Birthday Experience</p>
     </footer>
 
     <script>
-        function castSpell() {
-            const candle = document.getElementById('candle');
-            candle.innerHTML = '🎂✨🎉';
-            alert('✨ Alohomora! Wish Granted! كل سنة وانت طيب وبخير يا رب 🎉');
+        const candlesContainer = document.getElementById('floatingCandlesContainer');
+        for (let i = 0; i < 18; i++) {
+            const candle = document.createElement('div');
+            candle.className = 'floating-candle';
+            candle.style.left = Math.random() * 95 + 'vw';
+            candle.style.top = Math.random() * 80 + 'vh';
+            candle.style.animationDelay = Math.random() * 4 + 's';
+            candle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+
+            const flame = document.createElement('div');
+            flame.className = 'candle-flame';
+            candle.appendChild(flame);
+            candlesContainer.appendChild(candle);
+        }
+
+        const canvas = document.getElementById('magicCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let particles = [];
+
+        class SparkleParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 4 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                this.color = `hsl(${Math.random() * 40 + 35}, 100%, 65%)`;
+                this.life = 100;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= 2;
+                if (this.size > 0.2) this.size -= 0.04;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#EEBA30';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function addSparkles(e) {
+            const x = e.clientX || (e.touches && e.touches[0].clientX);
+            const y = e.clientY || (e.touches && e.touches[0].clientY);
+            if (x && y) {
+                for (let i = 0; i < 2; i++) {
+                    particles.push(new SparkleParticle(x, y));
+                }
+            }
+        }
+
+        window.addEventListener('mousemove', addSparkles);
+        window.addEventListener('touchmove', addSparkles);
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].life <= 0 || particles[i].size <= 0.2) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        let audioCtx;
+        let isPlaying = false;
+
+        function toggleAudio() {
+            const musicText = document.getElementById('musicText');
+            if (!isPlaying) {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                playChimeLoop();
+                musicText.innerText = "صوت السحر يغني 🎶";
+                isPlaying = true;
+            } else {
+                musicText.innerText = "الموسيقى السحرية 🎵";
+                isPlaying = false;
+            }
+        }
+
+        function playChimeLoop() {
+            if (!isPlaying) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            const notes = [261.63, 329.63, 392.00, 493.88, 523.25, 659.25];
+            const note = notes[Math.floor(Math.random() * notes.length)];
+            osc.frequency.setValueAtTime(note, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 1.2);
+
+            setTimeout(playChimeLoop, 700);
+        }
+
+        function openLetter() {
+            const flap = document.getElementById('envelopeFlap');
+            const seal = document.getElementById('waxSeal');
+            const envelope = document.getElementById('envelope');
+            const letter = document.getElementById('letterContent');
+
+            seal.style.transform = "scale(0)";
+            flap.style.transform = "rotateX(180deg)";
+            
+            setTimeout(() => {
+                envelope.classList.add('hidden');
+                letter.classList.remove('hidden');
+                setTimeout(() => {
+                    letter.classList.remove('opacity-0', 'translate-y-10');
+                }, 50);
+            }, 600);
+        }
+
+        function sortHouse() {
+            const resultBox = document.getElementById('sortingResult');
+            const icon = document.getElementById('houseIcon');
+            const title = document.getElementById('houseTitle');
+            const desc = document.getElementById('houseDescription');
+
+            const houses = [
+                {
+                    icon: "🦁",
+                    title: "منزل جريفندور (Gryffindor)",
+                    desc: "أنت تنتمي إلى منزل الشجاعة والنبل! قلبك النظيف والوفاء والطيبة تجعلك نبيلاً وبطلاً في عين كل من يعرفك."
+                },
+                {
+                    icon: "🦅",
+                    title: "منزل رافنكلو (Ravenclaw)",
+                    desc: "أنت تنتمي إلى منزل العقل والإبداع والتميز الاستثنائي! حضورك مميز وغير أي حد."
+                },
+                {
+                    icon: "🦡",
+                    title: "منزل هافلباف (Hufflepuff)",
+                    desc: "أنت تنتمي إلى منزل الوفاء والطيبة النادرة! شخصيتك النظيفة والطيبة هي الكنز الحقيقي."
+                }
+            ];
+
+            const sorted = houses[Math.floor(Math.random() * houses.length)];
+            
+            resultBox.classList.remove('hidden');
+            icon.innerText = sorted.icon;
+            title.innerText = sorted.title;
+            desc.innerText = sorted.desc;
+        }
+
+        function castSpell(spellId, msgId) {
+            const msg = document.getElementById(msgId);
+            msg.classList.toggle('hidden');
+            
+            for (let i = 0; i < 35; i++) {
+                particles.push(new SparkleParticle(window.innerWidth / 2, window.innerHeight / 2));
+            }
+        }
+
+        function blowCandles() {
+            const flames = document.querySelectorAll('.candle-flame');
+            flames.forEach(f => f.style.display = 'none');
+
+            const banner = document.getElementById('grandBirthdayBanner');
+            banner.classList.remove('hidden');
+
+            for (let i = 0; i < 120; i++) {
+                particles.push(new SparkleParticle(
+                    window.innerWidth / 2 + (Math.random() * 300 - 150),
+                    window.innerHeight / 2 + (Math.random() * 300 - 150)
+                ));
+            }
         }
     </script>
 </body>
-
 </html>
